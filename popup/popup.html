@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RemindMeThat</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body data-surface="popup">
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Primary navigation">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 128 128" width="28" height="28">
+            <rect width="128" height="128" rx="24" fill="#4A9BD9"/>
+            <line x1="30" y1="19" x2="98" y2="19" stroke="white" stroke-width="7" stroke-linecap="round"/>
+            <path d="M34 25 L64 64 L94 25 Z" fill="white"/>
+            <path d="M46 25 L64 49 L82 25 Z" fill="#B8D9F5" opacity="0.86"/>
+            <path d="M34 103 L64 64 L94 103 Z" fill="white"/>
+            <path d="M45 103 L64 79 L83 103 Z" fill="#B8D9F5" opacity="0.66"/>
+            <line x1="30" y1="109" x2="98" y2="109" stroke="white" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="64" cy="64" r="6" fill="#E2A94B"/>
+          </svg>
+        </div>
+        <nav class="rail-nav">
+          <button class="nav-item is-active" data-page="home" aria-label="Dashboard" title="Dashboard">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5 12 5l8 7.5"/><path d="M6.5 10.5V19h11v-8.5"/></svg>
+          </button>
+          <button class="nav-item" data-page="focus" aria-label="Focus mode" title="Focus mode">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg>
+          </button>
+          <button class="nav-item" data-page="mind" aria-label="Mind check-in" title="Mind check-in">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20c-4.5-2.7-7-5.5-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 3.5-2.5 6.3-7 9Z"/></svg>
+          </button>
+          <button class="nav-item" data-page="reminders" aria-label="Reminders" title="Reminders">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4a5 5 0 0 0-5 5v3.5L5 15h14l-2-2.5V9a5 5 0 0 0-5-5Z"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0"/></svg>
+          </button>
+          <button class="nav-item" data-page="screentime" aria-label="Screen time" title="Screen time">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="11" rx="2"/><path d="M9 19h6"/></svg>
+          </button>
+          <button class="nav-item" data-page="journal" aria-label="Journal" title="Journal">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10a2 2 0 0 1 2 2v14H9a2 2 0 0 0-2 2Z"/><path d="M7 4a2 2 0 0 0-2 2v14h2"/></svg>
+          </button>
+          <button class="nav-item" data-page="vault" aria-label="Vault" title="Vault">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v11l-7-3-7 3Z"/><path d="M9 9h6"/></svg>
+          </button>
+          <button class="nav-item" data-page="journey" aria-label="Journey" title="Journey">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </button>
+          <div style="flex:1"></div>
+          <button class="nav-item nav-sound-btn" id="nav-sound-toggle" aria-label="Toggle sounds" title="Toggle sounds">
+            <svg viewBox="0 0 24 24" aria-hidden="true" id="nav-sound-icon">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+            </svg>
+            <span class="sound-dot"></span>
+          </button>
+          <button class="nav-item" data-page="settings" aria-label="Settings" title="Settings">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 1.6 2.7 3.1.7-.7 3.1L18.7 11 16 12.6l-.7 3.1-3.1-.7L12 17.7 10.4 15l-3.1.7-.7-3.1L4 11l2.7-1.6.7-3.1 3.1-.7L12 3Z"/><circle cx="12" cy="11" r="2.75"/></svg>
+          </button>
+        </nav>
+      </aside>
+
+      <!-- Sound floating panel -->
+      <div class="sound-panel" id="sound-panel" hidden>
+        <div class="sound-panel__header">
+          <span class="sound-panel__title">Sounds</span>
+          <div class="sound-panel__now-playing" id="sound-now-playing" hidden>
+            <div class="eq-bars">
+              <div class="eq-bar"></div>
+              <div class="eq-bar"></div>
+              <div class="eq-bar"></div>
+              <div class="eq-bar"></div>
+            </div>
+            <span id="sound-now-playing-name"></span>
+          </div>
+        </div>
+        <div class="sound-panel__grid" id="sound-grid"></div>
+        <div class="sound-panel__controls" id="sound-controls" hidden>
+          <button class="sound-panel__play-btn" id="sound-play-btn" type="button" title="Play/Pause">
+            <svg class="sound-icon-play" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" stroke="none">
+              <polygon points="6 4 20 12 6 20 6 4"/>
+            </svg>
+            <svg class="sound-icon-pause" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" stroke="none" style="display:none">
+              <rect x="5" y="4" width="4" height="16" rx="1"/><rect x="15" y="4" width="4" height="16" rx="1"/>
+            </svg>
+          </button>
+          <span class="sound-panel__now-label" id="sound-controls-label">Not playing</span>
+          <button class="sound-panel__stop-btn" id="sound-stop-btn" type="button" title="Stop">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" stroke="none">
+              <rect x="5" y="5" width="14" height="14" rx="2"/>
+            </svg>
+          </button>
+        </div>
+        <div class="sound-panel__volume">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          </svg>
+          <input type="range" class="sound-panel__slider" id="sound-volume-slider" min="0" max="100" value="65">
+          <span class="sound-panel__volume-label" id="sound-volume-label">65%</span>
+        </div>
+      </div>
+
+      <main class="content">
+        <section class="page is-active" data-page-panel="home">
+          <header class="page-header">
+            <div>
+              <h1 id="home-headline">RemindMeThat</h1>
+              <div class="header-quote">
+                <span class="header-quote__label" id="featured-quote-label">Quote of the day</span>
+                <p class="header-quote__text" id="featured-quote">"Loading quote..."</p>
+              </div>
+            </div>
+            <div class="surface-actions">
+              <button class="surface-button surface-button--utility" id="home-theme-toggle" type="button" title="Theme">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="4"/>
+                  <path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+                </svg>
+                <span id="home-theme-toggle-label">System</span>
+              </button>
+              <button class="surface-button surface-button--utility" id="home-language-toggle" type="button" title="Language">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 5h12"/><path d="M10 3v2"/><path d="M6 5c0 5 3 9 6 11"/><path d="M12 5c0 2-1 4-2.5 5.5"/><path d="M14 15h6"/><path d="m17 12-3 9"/><path d="m20 12 3 9"/>
+                </svg>
+                <span id="home-language-toggle-label">Auto</span>
+              </button>
+              <button class="surface-button surface-button--primary" id="btn-open-dashboard" type="button" title="Open wide dashboard">
+                <span id="home-dashboard-label">Dashboard</span>
+              </button>
+              <button class="surface-button surface-button--secondary" id="btn-pin-side" type="button" title="Open compact side panel">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="14" y="2" width="8" height="20" rx="2"/>
+                  <path d="M2 12h8"/>
+                  <path d="M7 8l4 4-4 4"/>
+                </svg>
+              </button>
+            </div>
+          </header>
+
+          <div class="dashboard-grid">
+            <!-- ═══ ROW 1: Timer hero (full width) ═══ -->
+            <article class="card dash-focus-card" id="home-focus-card" data-focus-status="idle">
+              <div class="card-topline">
+                <span class="card-label" id="home-focus-label">Focus session</span>
+                <span class="pill pill--muted" id="home-focus-status-pill">Ready to focus</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div>
+                  <div class="dash-focus-timer">
+                    <span class="dash-focus-time" id="home-focus-time">25:00</span>
+                  </div>
+                  <span class="dash-focus-label" id="home-focus-sublabel">Deep work</span>
+                  <div class="dash-focus-presets" id="home-focus-presets">
+                    <button class="dash-preset" data-home-duration="15" type="button">15m</button>
+                    <button class="dash-preset" data-home-duration="25" type="button">25m</button>
+                    <button class="dash-preset" data-home-duration="45" type="button">45m</button>
+                    <button class="dash-preset" data-home-duration="60" type="button">60m</button>
+                  </div>
+                </div>
+                <div class="dash-focus-actions">
+                  <button class="primary-button" id="home-focus-start" type="button">Start focus</button>
+                  <button class="card-dots" id="home-focus-more" type="button" title="Focus options">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="var(--muted)" stroke="none">
+                      <circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <!-- ═══ ROW 2: Mood + Reminders ═══ -->
+            <div class="dash-row">
+              <article class="card mood-card">
+                <div class="card-topline">
+                  <span class="card-label" id="home-mood-label">How's your day?</span>
+                  <span class="pill pill--amber" id="today-mood-pill">Daily check-in</span>
+                </div>
+                <div class="mood-picker" id="mood-picker">
+                  <button class="mood-option" data-mood="rough">
+                    <span class="mood-face">
+                      <svg viewBox="0 0 32 32" width="28" height="28" fill="none">
+                        <circle cx="16" cy="16" r="14" stroke="#A32D2D" stroke-width="1.5" fill="#FCEBEB"/>
+                        <circle cx="11" cy="13" r="1.5" fill="#A32D2D"/>
+                        <circle cx="21" cy="13" r="1.5" fill="#A32D2D"/>
+                        <path d="M10 22c2.5-3 9.5-3 12 0" stroke="#A32D2D" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                      </svg>
+                    </span>
+                    <span class="mood-option__label">Stressed</span>
+                  </button>
+                  <button class="mood-option" data-mood="okay">
+                    <span class="mood-face">
+                      <svg viewBox="0 0 32 32" width="28" height="28" fill="none">
+                        <circle cx="16" cy="16" r="14" stroke="#854F0B" stroke-width="1.5" fill="#FAEEDA"/>
+                        <circle cx="11" cy="13" r="1.5" fill="#854F0B"/>
+                        <circle cx="21" cy="13" r="1.5" fill="#854F0B"/>
+                        <line x1="10" y1="20" x2="22" y2="20" stroke="#854F0B" stroke-width="1.5" stroke-linecap="round"/>
+                      </svg>
+                    </span>
+                    <span class="mood-option__label">Okay</span>
+                  </button>
+                  <button class="mood-option" data-mood="good">
+                    <span class="mood-face">
+                      <svg viewBox="0 0 32 32" width="28" height="28" fill="none">
+                        <circle cx="16" cy="16" r="14" stroke="#0F6E56" stroke-width="1.5" fill="#E1F5EE"/>
+                        <circle cx="11" cy="13" r="1.5" fill="#0F6E56"/>
+                        <circle cx="21" cy="13" r="1.5" fill="#0F6E56"/>
+                        <path d="M11 19c2 2.5 8 2.5 10 0" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                      </svg>
+                    </span>
+                    <span class="mood-option__label">Good</span>
+                  </button>
+                  <button class="mood-option" data-mood="great">
+                    <span class="mood-face">
+                      <svg viewBox="0 0 32 32" width="28" height="28" fill="none">
+                        <circle cx="16" cy="16" r="14" stroke="#4A9BD9" stroke-width="1.5" fill="#E8F2FB"/>
+                        <path d="M10 12c0.5-1 1.5-1.5 2-0.5" stroke="#4A9BD9" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                        <path d="M22 12c-0.5-1-1.5-1.5-2-0.5" stroke="#4A9BD9" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                        <path d="M9 18c2.5 5 11.5 5 14 0" stroke="#4A9BD9" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                      </svg>
+                    </span>
+                    <span class="mood-option__label">Great</span>
+                  </button>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="card-topline">
+                  <span class="card-label" id="home-up-next-label">Up next</span>
+                </div>
+                <div class="timeline-list" id="dashboard-reminders"></div>
+              </article>
+            </div>
+
+            <!-- ═══ ROW 3: Screen time + Quick note ═══ -->
+            <div class="dash-row dash-row--stats">
+              <article class="card stat-card" data-route="screentime" role="button" tabindex="0">
+                <div class="card-topline">
+                  <span class="card-label" id="home-screen-time-label">Screen time</span>
+                  <span class="pill pill--teal-solid" id="dashboard-productive-pill">Start browsing</span>
+                </div>
+                <p class="card-meta" id="dashboard-screentime-meta">Start browsing to track time.</p>
+                <div class="spark-chart" id="dashboard-spark-chart" aria-hidden="true">
+                  <div class="spark-bar" style="height:30%"></div>
+                  <div class="spark-bar" style="height:50%"></div>
+                  <div class="spark-bar" style="height:45%"></div>
+                  <div class="spark-bar" style="height:70%"></div>
+                  <div class="spark-bar" style="height:60%"></div>
+                  <div class="spark-bar" style="height:80%"></div>
+                  <div class="spark-bar" style="height:55%"></div>
+                  <div class="spark-bar" style="height:65%"></div>
+                  <div class="spark-bar" style="height:40%"></div>
+                </div>
+                <div class="stat-value" id="dashboard-screentime-total">0m</div>
+                <p class="card-meta dashboard-status" id="dashboard-screentime-status" hidden></p>
+              </article>
+
+              <article class="card dash-quicknote-card">
+                <div class="card-topline">
+                  <span class="card-label">Quick note</span>
+                  <button class="card-link" data-route="journal" type="button" style="font-size:10px;">Journal &rarr;</button>
+                </div>
+                <div class="quote-chip" id="capture-status-chip">Saved to inbox</div>
+                <form id="quick-note-form" class="dash-quicknote-form">
+                  <textarea id="quick-note-input" class="dash-quicknote-input" rows="2" placeholder="What's on your mind?"></textarea>
+                  <button class="primary-button" type="submit" style="font-size:11px;padding:6px 12px;">Save</button>
+                </form>
+                <div class="capture-list" id="capture-note-list"></div>
+                <div id="capture-journal-preview" hidden></div>
+                <div id="capture-vault-preview" hidden></div>
+              </article>
+            </div>
+
+            <!-- ═══ ROW 4: Tracker inline bar ═══ -->
+            <div class="tracker-inline" id="tracker-inline">
+              <div class="tracker-inline__icon">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <polyline points="9 12 11 14 15 10"/>
+                </svg>
+              </div>
+              <span class="tracker-inline__stat" id="tracker-inline-stat">1,204 blocked</span>
+              <span class="tracker-inline__pill">Active</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" data-page-panel="focus">
+          <header class="page-header">
+            <div>
+              <p class="eyebrow">Focus mode</p>
+              <h1>Timer and deep work.</h1>
+            </div>
+            <div class="quote-chip" id="focus-status-chip">Ready to focus</div>
+          </header>
+          <div class="focus-layout">
+            <!-- Left: Timer -->
+            <article class="card focus-ring-card">
+              <div class="focus-ring" id="focus-ring">
+                <div class="focus-ring__inner">
+                  <span class="focus-ring__value" id="focus-time-value">25:00</span>
+                  <span class="focus-ring__label" id="focus-time-label">Ready to start</span>
+                </div>
+              </div>
+              <label class="focus-label">
+                <span>Session intention</span>
+                <input id="focus-intention-input" type="text" maxlength="48" placeholder="Deep work" />
+              </label>
+              <div class="preset-row" id="focus-duration-presets">
+                <button class="pill pill--purple is-button" data-duration-minutes="15" type="button">15 min</button>
+                <button class="pill pill--purple is-button" data-duration-minutes="25" type="button">25 min</button>
+                <button class="pill pill--purple is-button" data-duration-minutes="45" type="button">45 min</button>
+                <button class="pill pill--purple is-button" data-duration-minutes="60" type="button">60 min</button>
+              </div>
+              <div class="focus-actions">
+                <button id="focus-start-button" class="primary-button" type="button">Start</button>
+                <button id="focus-pause-button" class="primary-button primary-button--ghost" type="button">Pause</button>
+                <button id="focus-reset-button" class="primary-button primary-button--ghost" type="button">Reset</button>
+              </div>
+              <!-- Sound status bar (read-only) -->
+              <div class="focus-sound-status" id="focus-sound-status">
+                <div class="focus-sound-status__icon" id="focus-sound-status-icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                  </svg>
+                </div>
+                <div class="focus-sound-status__text">
+                  <span class="focus-sound-status__title" id="focus-sound-status-title">Add ambience?</span>
+                  <span class="focus-sound-status__subtitle" id="focus-sound-status-subtitle">Tap sidebar sound icon</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Right: Blocked sites + Recent sessions stacked -->
+            <div class="focus-sidebar">
+              <article class="card list-card">
+                <div class="card-topline">
+                  <span class="card-label">Blocked sites</span>
+                  <span class="pill pill--amber" id="blocked-site-count">0 hosts</span>
+                </div>
+                <form id="blocked-site-form" class="blocked-site-form">
+                  <input id="blocked-site-input" type="text" maxlength="64" placeholder="news.ycombinator.com" />
+                  <button class="primary-button" type="submit">Add host</button>
+                </form>
+                <div class="blocked-sites-list" id="blocked-sites-list"></div>
+              </article>
+              <article class="card list-card">
+                <div class="card-topline">
+                  <span class="card-label">Recent sessions</span>
+                </div>
+                <div class="journal-list" id="focus-history-list"></div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" data-page-panel="mind">
+          <header class="page-header">
+            <div>
+              <p class="eyebrow">Mind check-in</p>
+              <h1>Weekly mood trend.</h1>
+            </div>
+            <div class="insight-chip" id="mood-insight-chip">Log a mood to start trends.</div>
+          </header>
+          <div class="split-layout split-layout--tight">
+            <article class="card chart-card">
+              <div class="card-topline">
+                <span class="card-label">Last 7 days</span>
+              </div>
+              <div class="mood-chart" id="weekly-mood-chart"></div>
+            </article>
+            <article class="card stack-card">
+              <div class="metric-pair">
+                <div>
+                  <span class="metric-label">Streak</span>
+                  <strong class="metric-value" id="mood-streak">0 days</strong>
+                </div>
+                <div>
+                  <span class="metric-label">Best day</span>
+                  <strong class="metric-value" id="best-day">No data</strong>
+                </div>
+              </div>
+              <p class="insight-copy" id="mood-insight-copy">Once you log a few days, this view will surface simple patterns.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" data-page-panel="reminders">
+          <header class="page-header">
+            <div>
+              <p class="eyebrow">Reminders</p>
+              <h1>Wellness prompts that actually fire.</h1>
+            </div>
+            <div class="quote-chip" id="reminder-status">Synced</div>
+          </header>
+          <div class="split-layout">
+            <article class="card list-card">
+              <div class="card-topline">
+                <span class="card-label">Active reminders</span>
+              </div>
+              <div class="reminder-list" id="reminder-list"></div>
+            </article>
+            <article class="card form-card">
+              <div class="card-topline">
+                <span class="card-label">Create custom reminder</span>
+              </div>
+              <form id="custom-reminder-form" class="form-grid">
+                <label>
+                  <span>Name</span>
+                  <input type="text" name="name" maxlength="40" placeholder="Take meds" required />
+                </label>
+                <label>
+                  <span>Interval (minutes)</span>
+                  <input type="number" name="interval" min="5" max="240" value="30" required />
+                </label>
+                <label>
+                  <span>Icon</span>
+                  <select name="icon">
+                    <option value="drop">Drop</option>
+                    <option value="wind">Wind</option>
+                    <option value="spark">Spark</option>
+                    <option value="eye">Eye</option>
+                    <option value="heart">Heart</option>
+                  </select>
+                </label>
+                <button type="submit" class="primary-button">Add reminder</button>
+              </form>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" data-page-panel="screentime">
+          <header class="page-header">
+            <div>
+              <p class="eyebrow">Screen time</p>
+              <h1>Where your attention went.</h1>
+            </div>
+            <div class="screentime-tabs">
+              <button class="pill pill--purple is-button is-selected" data-period="today" type="button">Today</button>
+              <button class="pill pill--purple is-button" data-period="week" type="button">Week</button>
+              <button class="pill pill--purple is-button" data-period="month" type="button">Month</button>
+            </div>
+          </header>
+          <div class="split-layout">
+            <article class="card stack-card">
+              <div class="metric-pair">
+                <div>
+                  <span class="metric-label">Total</span>
+                  <strong class="metric-value" id="screentime-total">0m</strong>
+                </div>
+                <div>
+                  <span class="metric-label">Productive</span>
+                  <strong class="metric-value" id="screentime-productive">0%</strong>
+                </div>
+              </div>
+              <p class="insight-copy" id="screentime-insight">Browse a few sites to start tracking.</p>
+            </article>
+            <article class="card list-card">
+              <div class="card-topline">
+                <span class="card-label">Top sites</span>
+              </div>
+              <div class="site-list" id="screentime-site-list">
+                <div class="empty-state">No screen time recorded yet.</div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" data-page-panel="journal">
+          <header class="page-header">
+            <div class="journal-title-row">
+              <svg class="journal-lock-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#993556" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <div>
+                <h1>My journal</h1>
+                <p class="eyebrow">Capture context around the day.</p>
+              </div>
+            </div>
+            <div class="private-pill">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#993556" stroke-width="2.5">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              Private
+            </div>
+          </header>
+          <div class="split-layout">
+            <article class="card form-card">
+              <div class="card-topline">
+                <span class="card-label">New entry</span>
+                <div class="quote-chip" id="journal-status">Private notebook</div>
+              </div>
+              <form id="journal-form" class="journal-form">
+                <textarea id="journal-text" name="text" rows="7" placeholder="What's on your mind right now?" required></textarea>
+                <button type="submit" class="primary-button">Save entry</button>
+              </form>
+            </article>
+            <article class="card list-card">
+              <div class="card-topline">
+                <span class="card-label">Recent entries</span>
+              </div>
+              <div class="journal-list" id="journal-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" data-page-panel="vault">
+          <header class="page-header">
+            <div>
+              <p class="eyebrow">Vault</p>
+              <h1>Kept items.</h1>
+            </div>
+          </header>
+          <div class="split-layout">
+            <article class="card list-card">
+              <div class="card-topline">
+                <span class="card-label">Saved for later</span>
+              </div>
+              <div class="journal-list" id="vault-list"></div>
+            </article>
+            <article class="card stack-card">
+              <div class="card-topline">
+                <span class="card-label">How vault works</span>
+              </div>
+              <p class="insight-copy">Pin quick notes or journal entries here so important things stay easy to revisit.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" data-page-panel="journey">
+          <header class="page-header">
+            <div>
+              <p class="eyebrow">Journey</p>
+              <h1>Your wellness story.</h1>
+            </div>
+          </header>
+          <div class="split-layout">
+            <article class="card stack-card">
+              <div class="card-topline">
+                <span class="card-label">Focus garden</span>
+              </div>
+              <div class="leaf-garden" id="journey-leaf-garden">
+                <div class="empty-state">Complete a focus session to grow your first leaf.</div>
+              </div>
+            </article>
+            <article class="card stack-card">
+              <div class="card-topline">
+                <span class="card-label">Milestones</span>
+              </div>
+              <div class="milestone-list" id="journey-milestones">
+                <div class="empty-state">Your achievements will appear here as you build habits.</div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" data-page-panel="settings">
+          <header class="page-header">
+            <div>
+              <p class="eyebrow">Settings</p>
+              <h1>Preferences and data.</h1>
+            </div>
+          </header>
+          <div class="split-layout">
+            <article class="card list-card">
+              <div class="card-topline">
+                <span class="card-label">Preferences</span>
+              </div>
+              <div class="settings-list" id="settings-list"></div>
+            </article>
+            <article class="card stack-card">
+              <div class="card-topline">
+                <span class="card-label">Data</span>
+              </div>
+              <p class="insight-copy">Export the current extension state as JSON.</p>
+              <button id="export-data-button" class="primary-button primary-button--ghost">Export data</button>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

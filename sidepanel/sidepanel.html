@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RemindMeThat</title>
+    <link rel="stylesheet" href="sidepanel.css" />
+  </head>
+  <body data-surface="sidepanel">
+    <div class="sp-root" data-surface="sidepanel">
+      <header class="sp-header">
+        <div class="sp-brand">
+          <svg viewBox="0 0 128 128" width="22" height="22" aria-hidden="true">
+            <rect width="128" height="128" rx="24" fill="#4A9BD9"/>
+            <line x1="30" y1="19" x2="98" y2="19" stroke="white" stroke-width="7" stroke-linecap="round"/>
+            <path d="M34 25 L64 64 L94 25 Z" fill="white"/>
+            <path d="M46 25 L64 49 L82 25 Z" fill="#B8D9F5" opacity="0.86"/>
+            <path d="M34 103 L64 64 L94 103 Z" fill="white"/>
+            <path d="M45 103 L64 79 L83 103 Z" fill="#B8D9F5" opacity="0.66"/>
+            <line x1="30" y1="109" x2="98" y2="109" stroke="white" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="64" cy="64" r="6" fill="#E2A94B"/>
+          </svg>
+          <div class="sp-brand-copy">
+            <span class="sp-title">RemindMeThat</span>
+            <span class="sp-subtitle">Companion panel</span>
+          </div>
+        </div>
+        <div class="sp-header-actions">
+          <button class="sp-sound-btn" id="sp-sound-toggle" type="button" title="Open sounds">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+            </svg>
+            <span class="sp-sound-dot"></span>
+          </button>
+          <button class="sp-switch" id="sp-open-dashboard" type="button" title="Open wide dashboard">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <rect x="3" y="3" width="18" height="18" rx="3"/>
+              <path d="M9 3v18"/>
+            </svg>
+            Open dashboard
+          </button>
+        </div>
+      </header>
+
+      <div class="sp-sound-panel" id="sp-sound-panel" hidden>
+        <div class="sp-sound-panel__header">
+          <span class="sp-sound-panel__title">Sounds</span>
+          <div class="sp-sound-panel__now-playing" id="sp-sound-now-playing" hidden>
+            <div class="eq-bars"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
+            <span id="sp-sound-now-playing-name"></span>
+          </div>
+        </div>
+        <div class="sp-sound-panel__grid" id="sp-sound-grid"></div>
+        <div class="sp-sound-panel__volume">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg>
+          <input type="range" class="sp-sound-panel__slider" id="sp-sound-volume-slider" min="0" max="100" value="65">
+          <span class="sp-sound-panel__volume-label" id="sp-sound-volume-label">65%</span>
+        </div>
+      </div>
+
+      <main class="sp-content">
+        <section class="sp-card">
+          <p class="sp-quote" id="sp-quote">"Protect your attention before you spend it."</p>
+          <button class="sp-quote-refresh" id="sp-quote-refresh" type="button">New quote</button>
+        </section>
+
+        <section class="sp-card sp-focus">
+          <div class="sp-card-header">
+            <span class="sp-label">Focus</span>
+            <span class="sp-pill" id="sp-focus-status">Ready to focus</span>
+          </div>
+          <div class="sp-timer">
+            <span class="sp-timer-value" id="sp-focus-time">25:00</span>
+            <span class="sp-timer-label" id="sp-focus-label">Deep work</span>
+          </div>
+          <div class="sp-presets" id="sp-presets">
+            <button class="sp-preset" data-minutes="15" type="button">15m</button>
+            <button class="sp-preset is-active" data-minutes="25" type="button">25m</button>
+            <button class="sp-preset" data-minutes="45" type="button">45m</button>
+            <button class="sp-preset" data-minutes="60" type="button">60m</button>
+          </div>
+          <div class="sp-focus-actions">
+            <button class="sp-btn-primary" id="sp-focus-start" type="button">Start focus</button>
+            <button class="sp-btn-ghost" id="sp-focus-pause" type="button" disabled>Pause</button>
+          </div>
+        </section>
+
+        <div class="sp-row">
+          <section class="sp-card sp-stat">
+            <span class="sp-stat-label">Screen time</span>
+            <span class="sp-stat-value" id="sp-screentime">0m</span>
+            <span class="sp-stat-meta" id="sp-productive">Start browsing to track</span>
+          </section>
+          <section class="sp-card sp-stat">
+            <span class="sp-stat-label">Water</span>
+            <span class="sp-stat-value" id="sp-water-time">30m</span>
+            <span class="sp-stat-meta" id="sp-water-meta">Next reminder</span>
+          </section>
+        </div>
+
+        <section class="sp-card">
+          <div class="sp-card-header">
+            <span class="sp-label">How's your day?</span>
+            <span class="sp-pill sp-pill--amber" id="sp-mood-pill">Tap to log</span>
+          </div>
+          <div class="sp-mood-row" id="sp-mood-picker">
+            <button class="sp-mood" data-mood="rough" type="button">
+              <div class="sp-mood-face" style="background:#FCEBEB;">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <circle cx="16" cy="16" r="14" stroke="#A32D2D" stroke-width="1.5" fill="none"/>
+                  <circle cx="11" cy="13" r="1.5" fill="#A32D2D"/>
+                  <circle cx="21" cy="13" r="1.5" fill="#A32D2D"/>
+                  <path d="M10 22c2.5-3 9.5-3 12 0" stroke="#A32D2D" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                </svg>
+              </div>
+              <span>Stressed</span>
+            </button>
+            <button class="sp-mood" data-mood="okay" type="button">
+              <div class="sp-mood-face" style="background:#FAEEDA;">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <circle cx="16" cy="16" r="14" stroke="#854F0B" stroke-width="1.5" fill="none"/>
+                  <circle cx="11" cy="13" r="1.5" fill="#854F0B"/>
+                  <circle cx="21" cy="13" r="1.5" fill="#854F0B"/>
+                  <line x1="10" y1="20" x2="22" y2="20" stroke="#854F0B" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <span>Okay</span>
+            </button>
+            <button class="sp-mood" data-mood="good" type="button">
+              <div class="sp-mood-face" style="background:#E1F5EE;">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <circle cx="16" cy="16" r="14" stroke="#0F6E56" stroke-width="1.5" fill="none"/>
+                  <circle cx="11" cy="13" r="1.5" fill="#0F6E56"/>
+                  <circle cx="21" cy="13" r="1.5" fill="#0F6E56"/>
+                  <path d="M11 19c2 2.5 8 2.5 10 0" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                </svg>
+              </div>
+              <span>Good</span>
+            </button>
+            <button class="sp-mood" data-mood="great" type="button">
+              <div class="sp-mood-face" style="background:#E8F2FB;">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <circle cx="16" cy="16" r="14" stroke="#4A9BD9" stroke-width="1.5" fill="none"/>
+                  <path d="M10 12c0.5-1 1.5-1.5 2-0.5" stroke="#4A9BD9" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                  <path d="M22 12c-0.5-1-1.5-1.5-2-0.5" stroke="#4A9BD9" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                  <path d="M9 18c2.5 5 11.5 5 14 0" stroke="#4A9BD9" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                </svg>
+              </div>
+              <span>Great</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="sp-card">
+          <div class="sp-card-header">
+            <span class="sp-label">Reminders</span>
+            <span class="sp-pill" id="sp-reminder-count">0 active</span>
+          </div>
+          <div class="sp-reminder-list" id="sp-reminder-list"></div>
+        </section>
+
+        <section class="sp-card sp-card--dark">
+          <span class="sp-label sp-label--tracker">Tracker blocker</span>
+          <span class="sp-stat-value sp-stat-value--tracker">3</span>
+          <span class="sp-stat-meta sp-stat-meta--tracker">Analytics and social trackers are blocked live.</span>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="sidepanel.js"></script>
+  </body>
+</html>

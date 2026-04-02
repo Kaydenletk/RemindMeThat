@@ -1,0 +1,7 @@
+# Internal project files (local only)
+CLAUDE.md
+.superpowers/
+ROADMAP.md
+
+# Build artifacts
+_metadata/
