@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="assets/icons/icon-128.png" width="80" height="80" alt="RemindMeThat icon" />
+  <img width="59" height="53" alt="Screenshot 2026-04-02 at 10 56 59 PM" src="https://github.com/user-attachments/assets/3e484b8e-f04a-4f95-9412-68886be0c8c6" />
 </p>
 
 <h1 align="center">RemindMeThat</h1>
@@ -17,8 +17,9 @@
 </p>
 
 ---
-<img width="755" height="604" alt="Screenshot 2026-04-02 at 10 53 02 PM" src="https://github.com/user-attachments/assets/e8a4665a-1a64-4ab9-b7fb-6cae4258fbd8" />
-
+<p align="center">
+  <img width="755" height="604" alt="Screenshot 2026-04-02 at 10 53 02 PM" src="https://github.com/user-attachments/assets/e8a4665a-1a64-4ab9-b7fb-6cae4258fbd8" />
+</p>
 ## Why RemindMeThat?
 
 Most productivity tools punish you with data. RemindMeThat is different — it's **wellness-first**. It greets you by time of day, reminds you to breathe and stretch, plays ambient rain sounds while you work, and tracks your mood over time. Think of it as a **calm companion** that sits in your browser, not a demanding productivity tracker.
@@ -28,13 +29,19 @@ Most productivity tools punish you with data. RemindMeThat is different — it's
 ---
 
 ## Features
-<img width="757" height="597" alt="Screenshot 2026-04-02 at 10 53 07 PM" src="https://github.com/user-attachments/assets/593858c8-9511-409c-9697-1b0ec3e54823" />
+
+<p align="center">
+  <img width="757" height="597" alt="Screenshot 2026-04-02 at 10 53 07 PM" src="https://github.com/user-attachments/assets/593858c8-9511-409c-9697-1b0ec3e54823" />
+  <img width="254" height="94" alt="Screenshot 2026-04-02 at 8 17 01 PM" src="https://github.com/user-attachments/assets/cca94d3f-ce27-4fa9-a763-c6eecec10c8d" />
+</p>
 
 ### Focus Timer
 Start a focus session directly from the dashboard — no navigation needed. Choose 15, 25, 45, or 60 minutes. The timer counts down while you work. When a session completes, your leaf garden grows.
 
 
-<img width="264" height="296" alt="Screenshot 2026-04-02 at 10 53 12 PM" src="https://github.com/user-attachments/assets/32e90704-ecc9-4499-ab59-a6349b887ab5" />
+<p align="center">
+  <img width="264" height="296" alt="Screenshot 2026-04-02 at 10 53 12 PM" src="https://github.com/user-attachments/assets/32e90704-ecc9-4499-ab59-a6349b887ab5" />
+</p>
 
 ### Ambient Soundscapes
 8 procedurally generated sounds you can play anytime — not just during focus sessions. Rain and Forest use **real recorded audio** as a base layer with procedural drops and bird chirps layered on top for a sound that never repeats.
@@ -46,7 +53,9 @@ Start a focus session directly from the dashboard — no navigation needed. Choo
 
 Sound auto-pauses when you lock your screen and resumes when you return.
 
-<img width="317" height="373" alt="Screenshot 2026-04-02 at 10 55 44 PM" src="https://github.com/user-attachments/assets/b508e588-316f-4add-93ca-f073de74132d" />
+<p align="center">
+  <img width="317" height="373" alt="Screenshot 2026-04-02 at 10 55 44 PM" src="https://github.com/user-attachments/assets/b508e588-316f-4add-93ca-f073de74132d" />
+</p>
 
 ### Smart Reminders
 Gentle wellness nudges that respect your presence:
