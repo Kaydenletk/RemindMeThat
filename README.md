@@ -33,6 +33,7 @@ Most productivity tools punish you with data. RemindMeThat is different — it's
 Start a focus session directly from the dashboard — no navigation needed. Choose 15, 25, 45, or 60 minutes. The timer counts down while you work. When a session completes, your leaf garden grows.
 
 <img width="241" height="271" alt="Screenshot 2026-04-02 at 8 32 36 PM" src="https://github.com/user-attachments/assets/2d21723c-3c66-4ec8-8bd7-ccb2f1b61c14" />
+
 ### Ambient Soundscapes
 8 procedurally generated sounds you can play anytime — not just during focus sessions. Rain and Forest use **real recorded audio** as a base layer with procedural drops and bird chirps layered on top for a sound that never repeats.
 
