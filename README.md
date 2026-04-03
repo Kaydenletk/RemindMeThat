@@ -17,6 +17,7 @@
 </p>
 
 ---
+<img width="755" height="604" alt="Screenshot 2026-04-02 at 10 53 02 PM" src="https://github.com/user-attachments/assets/e8a4665a-1a64-4ab9-b7fb-6cae4258fbd8" />
 
 ## Why RemindMeThat?
 
