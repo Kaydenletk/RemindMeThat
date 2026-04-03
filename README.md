@@ -1,4 +1,3 @@
-<img width="241" height="271" alt="Screenshot 2026-04-02 at 8 32 36 PM" src="https://github.com/user-attachments/assets/384286ad-5a49-450f-9dd4-873da611e1f6" />
 
 <p align="center">
   <img src="assets/icons/icon-128.png" width="80" height="80" alt="RemindMeThat icon" />
